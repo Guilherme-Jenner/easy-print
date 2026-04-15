@@ -1,0 +1,21 @@
+#Vscode
+.vscode/
+
+# Ambientes Virtuais
+venv/
+
+# Pastas de Compilação do PyInstaller
+build/
+dist/
+*.spec
+
+# Arquivos Binários e Pacotes
+*.deb
+*.exe
+
+# Cache do Python e OS
+__pycache__/
+*.pyc
+.DS_Store
+
+easy-print_1.0.0_amd64/usr/bin/easy-print
