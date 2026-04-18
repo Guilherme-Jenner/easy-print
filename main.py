@@ -29,6 +29,7 @@ class EasyPrint(QWidget):
         self.rect_imagem = QRect()
         self.linhas_desenhadas = []
         self.ponto_inicio_desenho = None
+        self.is_exporting = False
         self.ponto_fim_desenho = None
         self.esta_desenhando = False
         self.seta_ativada = False
@@ -149,7 +150,7 @@ class EasyPrint(QWidget):
         inicio_do_processo = time.time()
 
         subprocess.run(comando)
-        time.sleep(0.5)
+        # time.sleep(0.5)
 
         foto_salva = self.localizar_print_interativo(inicio_do_processo)
 
@@ -255,9 +256,10 @@ class EasyPrint(QWidget):
         painter.drawPixmap(self.rect_imagem, self.pixmap_atual)
 
         # 4. Desenhar borda na imagem para destacar
-        pen = QPen(QColor(72, 187, 197), 2)
-        painter.setPen(pen)
-        painter.drawRect(self.rect_imagem)
+        if not self.is_exporting:
+            pen = QPen(QColor(72, 187, 197), 2)
+            painter.setPen(pen)
+            painter.drawRect(self.rect_imagem)
 
         # ==========================================
         # 5. MÓDULO DE DESENHO (O que entra de novo!)
@@ -433,11 +435,16 @@ class EasyPrint(QWidget):
 
     def acao_copiar(self):
         print("📋 Copiando imagem para a área de transferência...")
-        
+
+        self.is_exporting = True
+        self.repaint()
+
         if hasattr(self, 'painel'):
             self.painel.hide()
             # Força a tela a apagar o painel instantaneamente
             QApplication.processEvents()
+
+        
 
         # 1. Congela a tela atual (sua foto + os desenhos vermelhos que você fez)
         print_final = self.grab(self.rect_imagem) 
@@ -452,11 +459,14 @@ class EasyPrint(QWidget):
 
     def acao_salvar(self):
         print("💾 Preparando imagem para salvar...")
+        self.is_exporting = True
+        self.repaint()
         
         # 1. Esconde o painel para não sair na foto
         if hasattr(self, 'painel'):
             self.painel.hide()
             QApplication.processEvents() 
+
         
         # 2. Recorta exatamente a área da imagem com as marcações
         print_final = self.grab(self.rect_imagem) 

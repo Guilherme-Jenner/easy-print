@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=EasyPrint
+Exec=bash -c "sleep 3 && /usr/bin/easy-print"
+Icon=camera-photo-symbolic
+Terminal=false
+X-GNOME-Autostart-enabled=true
